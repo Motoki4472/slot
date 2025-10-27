@@ -4,13 +4,13 @@ namespace Assets.data
 {
     public class Seven : MonoBehaviour, ISymbol
     {
-        [SerializeField] private string name = "Seven";
+        [SerializeField] private int Id = 3;
         [SerializeField] private int value = 700;
         [SerializeField] private Sprite sprite;
 
-        public string GetName()
+        public int GetId()
         {
-            return name;
+            return Id;
         }
 
         public int GetValue()

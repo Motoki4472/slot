@@ -4,7 +4,7 @@ namespace Assets.data
 {
     public interface ISymbol
     {
-        string GetName();
+        int GetId();
         int GetValue();
         Sprite GetSprite();
     }
