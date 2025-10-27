@@ -4,13 +4,13 @@ namespace Assets.data
 {
     public class Bell : MonoBehaviour, ISymbol
     {
-        [SerializeField] private string name = "Bell";
-        [SerializeField] private int value = 250;
+        [SerializeField] private int Id = 2;
+        [SerializeField] private int value = 500;
         [SerializeField] private Sprite sprite;
 
-        public string GetName()
+        public int GetId()
         {
-            return name;
+            return Id;
         }
 
         public int GetValue()

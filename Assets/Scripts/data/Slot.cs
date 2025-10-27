@@ -5,28 +5,41 @@ namespace Assets.data
 {
     public class Slot
     {
-        private List<ISymbol> symbols;
-        private int rows;
-        private int verticalLines;
+        private List<ISymbol> leftSymbols;
+        private List<ISymbol> middleSymbols;
+        private List<ISymbol> rightSymbols;
+        private int row;
+        private int column;
 
-        public Slot(List<ISymbol> symbols, int rows, int verticalLines)
+        public Slot(List<ISymbol> leftSymbols, List<ISymbol> middleSymbols, List<ISymbol> rightSymbols, int row, int column)
         {
-            this.symbols = symbols;
-            this.rows = rows;
-            this.verticalLines = verticalLines;
+            this.leftSymbols = leftSymbols;
+            this.middleSymbols = middleSymbols;
+            this.rightSymbols = rightSymbols;
+            this.row = row;
+            this.column = column;
         }
 
-        public List<ISymbol> getSymbols()
+        public List<ISymbol> getLeftSymbols()
         {
-            return symbols;
+            return leftSymbols;
         }
-        public int getRows()
+        public List<ISymbol> getMiddleSymbols()
         {
-            return rows;
+            return middleSymbols;
         }
-        public int getVerticalLines()
+        public List<ISymbol> getRightSymbols()
         {
-            return verticalLines;
+            return rightSymbols;
         }
+        public int getRow()
+        {
+            return row;
+        }
+        public int getColumn()
+        {
+            return column;
+        }
+
     }
 }
