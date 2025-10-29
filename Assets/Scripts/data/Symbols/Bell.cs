@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.data
+namespace Assets.Data
 {
     public class Bell : MonoBehaviour, ISymbol
     {

@@ -1,18 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.slot;
-using Assets.data;
+using Assets.Slot;
+using Assets.Data;
 
 
-namespace Assets.system
+namespace Assets.System
 {
     public class MainSystem : MonoBehaviour
     {
 
         private SlotSystem slotSystem;
-        private Slot slot;
+        private SlotData slotData;
         private Combo combo;
-        private Score score;
+        private ScoreData scoreData;
         [SerializeField] private List<ISymbol> leftSymbols;
         [SerializeField] private List<ISymbol> middleSymbols;
         [SerializeField] private List<ISymbol> rightSymbols;
@@ -20,10 +20,10 @@ namespace Assets.system
 
         public void Start()
         {
-            slot = new Slot(leftSymbols, middleSymbols, rightSymbols, 3, 3);
-            slotSystem = new SlotSystem(slot, this);
+            slotData = new SlotData(leftSymbols, middleSymbols, rightSymbols, 3, 3);
+            slotSystem = new SlotSystem(slotData, this);
             combo = new Combo();
-            score = new Score();
+            scoreData = new ScoreData();
             currentState = GameState.StopSlot;
         }
 

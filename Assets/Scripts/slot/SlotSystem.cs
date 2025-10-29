@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.data;
-using Assets.system;
+using Assets.Data;
+using Assets.System;
 
-namespace Assets.slot
+namespace Assets.Slot
 {
 
     public class SlotSystem
@@ -11,11 +11,11 @@ namespace Assets.slot
         private int row;
         private int column;
         private ISymbol[,] symbols;
-        private Slot slotData;
+        private SlotData slotData;
         private SlotSpeed slotSpeed;
         private MainSystem mainSystem;
         private SlotState slotState;
-        public SlotSystem(Slot slotData, MainSystem mainSystem)
+        public SlotSystem(SlotData slotData, MainSystem mainSystem)
         {
             this.slotData = slotData;
             this.row = slotData.getRow();

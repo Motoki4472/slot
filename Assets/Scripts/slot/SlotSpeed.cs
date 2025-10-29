@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.slot
+namespace Assets.Slot
 {
     public class SlotSpeed
     {

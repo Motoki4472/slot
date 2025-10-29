@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Assets.data
+namespace Assets.Data
 {
-    public class Slot
+    public class SlotData
     {
         private List<ISymbol> leftSymbols;
         private List<ISymbol> middleSymbols;
@@ -11,7 +11,7 @@ namespace Assets.data
         private int row;
         private int column;
 
-        public Slot(List<ISymbol> leftSymbols, List<ISymbol> middleSymbols, List<ISymbol> rightSymbols, int row, int column)
+        public SlotData(List<ISymbol> leftSymbols, List<ISymbol> middleSymbols, List<ISymbol> rightSymbols, int row, int column)
         {
             this.leftSymbols = leftSymbols;
             this.middleSymbols = middleSymbols;
