@@ -1,13 +1,13 @@
 using UnityEngine;
 
-namespace Assets.data
+namespace Assets.Data
 {
-    public class Score
+    public class ScoreData
     {
         private int currentScore;
         private int highScore;
 
-        public Score()
+        public ScoreData()
         {
             currentScore = 0;
             highScore = PlayerPrefs.GetInt("HighScore", 0);

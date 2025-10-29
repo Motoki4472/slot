@@ -1,22 +1,36 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.data;
+using Assets.Data;
+using Assets.System;
 
-namespace Assets.slot
+namespace Assets.Slot
 {
 
-    public class SlotSystem : MonoBehaviour
+    public class SlotSystem
     {
         private int row;
         private int column;
         private ISymbol[,] symbols;
-        private Slot slotData;
-        public void Initialize(Slot slotData)
+        private SlotData slotData;
+        private SlotSpeed slotSpeed;
+        private MainSystem mainSystem;
+        private SlotState slotState;
+        public SlotSystem(SlotData slotData, MainSystem mainSystem)
         {
             this.slotData = slotData;
             this.row = slotData.getRow();
             this.column = slotData.getColumn();
             symbols = new ISymbol[row, column];
+            slotSpeed = new SlotSpeed();
+            this.mainSystem = mainSystem;
+            slotState = SlotState.left;
+        }
+        private enum SlotState
+        {
+            left,
+            middle,
+            right,
+            stop
         }
 
         public void SetSymbol(int row, int column, ISymbol symbol)
@@ -34,13 +48,21 @@ namespace Assets.slot
             symbols = new ISymbol[row, column];
         }
 
-        public void StartSlot(float speed)
+        public void StartSlot(int combo)
         {
+            slotState = SlotState.left;
             // Logic to start the slot machine
         }
         public void StopSlot()
         {
-            // Logic to stop the slot machine
+            // アニメーションストップ
+            PositionsCorrection();
+            NextSlotState();
+            if(slotState != SlotState.stop)
+            {
+                // CheckMatch();
+            }
+
 
         }
         private void PositionsCorrection()
@@ -50,6 +72,21 @@ namespace Assets.slot
         private void updateSymbles()
         {
             // Logic to update symbols on the slot machine
+        }
+        private void NextSlotState()
+        {
+            if (slotState == SlotState.left)
+            {
+                slotState = SlotState.middle;
+            }
+            else if (slotState == SlotState.middle)
+            {
+                slotState = SlotState.right;
+            }
+            else if (slotState == SlotState.right)
+            {
+                slotState = SlotState.stop;
+            }
         }
 
         public List<(int SymbolId, int LineId)> CheckMatch()
