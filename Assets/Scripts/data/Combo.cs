@@ -14,9 +14,9 @@ namespace Assets.Data
             highCombo = PlayerPrefs.GetInt("HighCombo", 0);
         }
 
-        public void AddCombo(int Combo)
+        public void IncrementCombo()
         {
-            currentCombo += Combo;
+            currentCombo++;
             if (currentCombo > highCombo)
             {
                 highCombo = currentCombo;

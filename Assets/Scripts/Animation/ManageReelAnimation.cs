@@ -1,16 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
+using DG.Tweening;
+using System;
 
 namespace Assets.Animation
 {
     public class ManageReelAnimation : MonoBehaviour
     {
-        [SerializeField] private float spinSpeed = 10.0f; // スピン速度
-        [SerializeField] private List<GameObject> symbols = new List<GameObject>(); // シンボルリスト
-        [SerializeField] private float symbolHeight = 1.0f; // シンボルの高さ
-        [SerializeField] private bool isSpinning = false; // スピン中かどうかのフラグ
-        [SerializeField] private float reelHeight; // リール全体の高さ
-        private float bottomThreshold; // ループ判定のためのY座標の下限
+        [SerializeField] private float spinSpeed = 10.0f;
+        [SerializeField] private List<GameObject> symbols = new List<GameObject>();
+        [SerializeField] private float symbolHeight = 1.0f; 
+        [SerializeField] private bool isSpinning = false; 
+        [SerializeField] private float reelHeight;
+        private float bottomThreshold;
 
         public void Initialize(List<GameObject> symbolObjects, float height)
         {
@@ -25,10 +27,11 @@ namespace Assets.Animation
                 // Y座標が -1.5 を下回ったらループさせる。
                 bottomThreshold = -reelHeight / 2f;
             }
-            else
-            {
-                reelHeight = 0;
-            }
+        }
+
+        public void SetSymbols(List<GameObject> symbolObjects)
+        {
+            symbols = symbolObjects;
         }
 
         public void SetSpinSpeed(float speed)
@@ -38,19 +41,12 @@ namespace Assets.Animation
 
         void Update()
         {
-            // スピン中でなければ何もしない
-            if (!isSpinning)
-            {
-                return;
-            }
+            if (!isSpinning) return;
 
-            // 各シンボルを下に移動させる
             foreach (var symbol in symbols)
             {
-                // Time.deltaTime を使ってフレームレートに依存しない移動を行う
                 symbol.transform.Translate(0, -spinSpeed * Time.deltaTime, 0, Space.Self);
 
-                // シンボルが下限を超えたら、リール全体の高さ分だけ瞬時に上に移動させる
                 if (symbol.transform.localPosition.y < bottomThreshold)
                 {
                     symbol.transform.localPosition += new Vector3(0, reelHeight, 0);
@@ -71,23 +67,58 @@ namespace Assets.Animation
         public void StopSpinning()
         {
             isSpinning = false;
-            // ここに停止時の位置調整処理を追加できます
-            // AdjustPositionAfterStop();
         }
 
-        // (オプション) 停止時に最寄りの位置にスナップさせる関数
         private void AdjustPositionAfterStop()
         {
             foreach (var symbol in symbols)
             {
                 float currentY = symbol.transform.localPosition.y;
-                // 最も近いシンボルのY座標を計算
                 float closestY = Mathf.Round(currentY / symbolHeight) * symbolHeight;
-                // 新しい位置をVector3で作成
                 Vector3 newPosition = new Vector3(symbol.transform.localPosition.x, closestY, symbol.transform.localPosition.z);
-                // 位置を更新
                 symbol.transform.localPosition = newPosition;
             }
         }
+
+        public void SnapToAnchorPositions(Transform[] anchors, Action onComplete = null)
+        {
+            if (symbols == null || symbols.Count == 0 || anchors == null || anchors.Length == 0)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+
+            Transform centerAnchor = anchors[1];
+            GameObject closestSymbol = null;
+            float minDistance = float.MaxValue;
+
+            foreach (var symbol in symbols)
+            {
+                float distance = Mathf.Abs(symbol.transform.position.y - centerAnchor.position.y);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestSymbol = symbol;
+                }
+            }
+
+            if (closestSymbol == null)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+
+            float deltaY = centerAnchor.position.y - closestSymbol.transform.position.y;
+
+            Sequence sequence = DOTween.Sequence();
+            foreach (var symbol in symbols)
+            {
+                Vector3 targetPos = symbol.transform.localPosition + new Vector3(0, deltaY, 0);
+                sequence.Join(symbol.transform.DOLocalMove(targetPos, 0.2f).SetEase(Ease.OutQuad));
+            }
+            sequence.OnComplete(() => onComplete?.Invoke());
+        }
+
+        
     }
 }
