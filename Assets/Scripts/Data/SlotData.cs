@@ -5,13 +5,13 @@ namespace Assets.Data
 {
     public class SlotData
     {
-        private List<ISymbol> leftSymbols;
-        private List<ISymbol> middleSymbols;
-        private List<ISymbol> rightSymbols;
+        private List<GameObject> leftSymbols;
+        private List<GameObject> middleSymbols;
+        private List<GameObject> rightSymbols;
         private int row;
         private int column;
 
-        public SlotData(List<ISymbol> leftSymbols, List<ISymbol> middleSymbols, List<ISymbol> rightSymbols, int row, int column)
+        public SlotData(List<GameObject> leftSymbols, List<GameObject> middleSymbols, List<GameObject> rightSymbols, int row, int column)
         {
             this.leftSymbols = leftSymbols;
             this.middleSymbols = middleSymbols;
@@ -20,15 +20,15 @@ namespace Assets.Data
             this.column = column;
         }
 
-        public List<ISymbol> getLeftSymbols()
+        public List<GameObject> getLeftSymbols()
         {
             return leftSymbols;
         }
-        public List<ISymbol> getMiddleSymbols()
+        public List<GameObject> getMiddleSymbols()
         {
             return middleSymbols;
         }
-        public List<ISymbol> getRightSymbols()
+        public List<GameObject> getRightSymbols()
         {
             return rightSymbols;
         }

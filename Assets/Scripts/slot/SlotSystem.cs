@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Assets.Data;
 using Assets.System;
+using Assets.Animation;
 
 namespace Assets.Slot
 {
@@ -13,16 +14,26 @@ namespace Assets.Slot
         private ISymbol[,] symbols;
         private SlotData slotData;
         private SlotSpeed slotSpeed;
-        private MainSystem mainSystem;
+        private GameSystem gameSystem;
         private SlotState slotState;
-        public SlotSystem(SlotData slotData, MainSystem mainSystem)
+        private List<GameObject> leftSymbols;
+        private List<GameObject> middleSymbols;
+        private List<GameObject> rightSymbols;
+        private GameObject leftReel;
+        private GameObject middleReel;
+        private GameObject rightReel;
+        private float symbolHeight = 1f;
+        public SlotSystem(SlotData slotData, GameSystem gameSystem)
         {
             this.slotData = slotData;
             this.row = slotData.getRow();
             this.column = slotData.getColumn();
             symbols = new ISymbol[row, column];
             slotSpeed = new SlotSpeed();
-            this.mainSystem = mainSystem;
+            this.gameSystem = gameSystem;
+            leftReel = gameSystem.GetLeftReel();
+            middleReel = gameSystem.GetMiddleReel();
+            rightReel = gameSystem.GetRightReel();
             slotState = SlotState.left;
         }
         private enum SlotState
@@ -31,6 +42,11 @@ namespace Assets.Slot
             middle,
             right,
             stop
+        }
+
+        public float GetSymbolHeight()
+        {
+            return symbolHeight;
         }
 
         public void SetSymbol(int row, int column, ISymbol symbol)
@@ -52,14 +68,38 @@ namespace Assets.Slot
         {
             slotState = SlotState.left;
             // Logic to start the slot machine
+            float speed = slotSpeed.GetAdjustedSpeed(combo);
+            leftReel.GetComponent<ManageReelAnimation>().SetSpinSpeed(speed);
+            middleReel.GetComponent<ManageReelAnimation>().SetSpinSpeed(speed);
+            rightReel.GetComponent<ManageReelAnimation>().SetSpinSpeed(speed);
+            leftReel.GetComponent<ManageReelAnimation>().StartSpinning();
+            middleReel.GetComponent<ManageReelAnimation>().StartSpinning();
+            rightReel.GetComponent<ManageReelAnimation>().StartSpinning();
+
         }
         public void StopSlot()
         {
             // アニメーションストップ
             PositionsCorrection();
             NextSlotState();
-            if(slotState != SlotState.stop)
+            if (slotState == SlotState.left)
             {
+                leftReel.GetComponent<ManageReelAnimation>().StopSpinning();
+                //PositionsCorrection();
+            }
+            else if (slotState == SlotState.middle)
+            {
+                middleReel.GetComponent<ManageReelAnimation>().StopSpinning();
+                //PositionsCorrection();
+            }
+            else if (slotState == SlotState.right)
+            {
+                rightReel.GetComponent<ManageReelAnimation>().StopSpinning();
+                //PositionsCorrection();
+            }
+            else if (slotState == SlotState.stop)
+            {
+                //updateSymbols();
                 // CheckMatch();
             }
 
@@ -69,7 +109,7 @@ namespace Assets.Slot
         {
             // Logic to correct positions of symbols
         }
-        private void updateSymbles()
+        private void updateSymbols()
         {
             // Logic to update symbols on the slot machine
         }
@@ -86,6 +126,29 @@ namespace Assets.Slot
             else if (slotState == SlotState.right)
             {
                 slotState = SlotState.stop;
+            }
+        }
+
+    
+        public void SetReels(GameObject leftReel, GameObject middleReel, GameObject rightReel)
+        {
+            leftSymbols = slotData.getLeftSymbols();
+            middleSymbols = slotData.getMiddleSymbols();
+            rightSymbols = slotData.getRightSymbols();
+
+            // Logic to set reels with the provided GameObjects
+            SetSingleReel(leftReel, leftSymbols);
+            SetSingleReel(middleReel, middleSymbols);
+            SetSingleReel(rightReel, rightSymbols);
+
+        }
+
+        private void SetSingleReel(GameObject reel, List<GameObject> symbols)
+        {
+            for (int i = 0; i < symbols.Count; i++)
+            {
+                GameObject symbol = GameObject.Instantiate(symbols[i], reel.transform);
+                symbol.transform.localPosition = new Vector3(0, i * symbolHeight, 0);
             }
         }
 

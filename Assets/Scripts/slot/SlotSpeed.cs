@@ -4,8 +4,8 @@ namespace Assets.Slot
 {
     public class SlotSpeed
     {
-        [SerializeField] private float spinSpeed = 5.0f;
-        [SerializeField] private float randomRange = 2.0f;
+        private float spinSpeed = 5.0f;
+        private float randomRange = 2.0f;
 
         public float GetSpinSpeed()
         {
