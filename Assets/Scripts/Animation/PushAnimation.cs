@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
 
 namespace Assets.animation
@@ -9,32 +8,33 @@ namespace Assets.animation
         [SerializeField] private Sprite firstImage;
         [SerializeField] private Sprite secondImage;
         [SerializeField] private float switchDuration = 0.2f;
-        private Image targetImage;
+        private SpriteRenderer targetRenderer;
+
         private void Awake()
         {
-            targetImage = GetComponent<Image>();
-            if (targetImage == null)
+            targetRenderer = GetComponent<SpriteRenderer>();
+            if (targetRenderer == null)
             {
-                Debug.LogError("Imageコンポーネントがアタッチされていません。");
+                Debug.LogError("SpriteRenderer コンポーネントがアタッチされていません。");
             }
         }
 
         /// <summary>
-        /// 画像を2つ目に切り替え、0.2秒後に1つ目に戻す
+        /// 画像を2つ目に切り替え、指定時間後に1つ目に戻す
         /// </summary>
         public void PlayAnimation()
         {
-            if (targetImage == null || firstImage == null || secondImage == null)
+            if (targetRenderer == null || firstImage == null || secondImage == null)
             {
                 Debug.LogError("必要な設定が不足しています。");
                 return;
             }
 
-            targetImage.sprite = secondImage;
+            targetRenderer.sprite = secondImage;
 
             DOVirtual.DelayedCall(switchDuration, () =>
             {
-                targetImage.sprite = firstImage;
+                targetRenderer.sprite = firstImage;
             });
         }
     }
