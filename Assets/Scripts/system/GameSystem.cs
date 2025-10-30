@@ -17,6 +17,8 @@ namespace Assets.System
         private Combo combo;
         private ScoreData scoreData;
         [SerializeField] private ScoreText scoreText;
+        [SerializeField] private ComboText comboText;
+        [SerializeField] private EffectAnimation effectAnimation;
         [SerializeField] private List<GameObject> leftSymbols;
         private List<GameObject> leftSymbolInstances;
         [SerializeField] private List<GameObject> middleSymbols;
@@ -29,6 +31,8 @@ namespace Assets.System
         [SerializeField] private Vector3 reelPosition;
         [SerializeField] private float reelSpacing;
         [SerializeField] private Transform[] stopAnchors = new Transform[9];
+        [SerializeField] private GameObject Handle;
+        [SerializeField] private GameObject Button;
         private GameState currentState;
         private int row = 3;
         private int column = 3;
@@ -46,6 +50,7 @@ namespace Assets.System
             combo = new Combo();
             scoreData = new ScoreData();
             scoreText.UpdateScore(scoreData.GetScore());
+            comboText.UpdateCombo(combo.GetCombo()); 
             currentState = GameState.StopSlot;
             MakeReels();
             leftReel.GetComponent<ManageReelAnimation>().Initialize(leftSymbols, slotSystem.GetSymbolHeight());
@@ -98,11 +103,17 @@ namespace Assets.System
                 scoreData.AddScore(totalScore);
                 scoreText.UpdateScore(scoreData.GetScore());
                 combo.IncrementCombo(); // マッチしたのでコンボを増やす
+                if (effectAnimation != null)
+                {
+                    effectAnimation.PlayRandomEffect();
+                    Debug.Log("エフェクトアニメーションを再生しました。");
+                }
             }
             else
             {
                 combo.ResetCombo(); // マッチしなかったのでコンボをリセット
             }
+            comboText.UpdateCombo(combo.GetCombo());
         }
 
         public enum GameState
@@ -117,6 +128,7 @@ namespace Assets.System
             {
                 currentState = GameState.StopSlot;
                 slotSystem.StartSlot(combo.GetCombo());
+                Handle.GetComponent<PushAnimation>().PlayAnimation();
             }
         }
 
@@ -125,6 +137,7 @@ namespace Assets.System
             if (currentState == GameState.StopSlot)
             {
                 slotSystem.StopSlot();
+                Button.GetComponent<PushAnimation>().PlayAnimation();
             }
         }
 

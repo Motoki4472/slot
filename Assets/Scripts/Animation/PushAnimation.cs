@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-namespace Assets.animation
+namespace Assets.Animation
 {
     public class PushAnimation : MonoBehaviour
     {
