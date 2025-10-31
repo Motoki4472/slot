@@ -7,5 +7,6 @@ namespace Assets.Data
         int GetId();
         int GetValue();
         Sprite GetSprite();
+        GameObject GetGameObject();
     }
 }
