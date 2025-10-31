@@ -22,5 +22,9 @@ namespace Assets.Data
         {
             return sprite;
         }
+        public GameObject GetGameObject()
+        {
+            return this.gameObject;
+        }
     }
 }

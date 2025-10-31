@@ -4,7 +4,7 @@ namespace Assets.Slot
 {
     public class SlotSpeed
     {
-        private float spinSpeed = 7.0f;
+        private float spinSpeed = 5.5f;
         private float randomRange = 2.0f;
 
         public float GetSpinSpeed()
