@@ -85,6 +85,7 @@ namespace Assets.UI
             int exclamationCount = combo / 5;
             if (exclamationCount > 0)
             {
+                if (exclamationCount > 10) exclamationCount = 10; // 最大10個まで
                 text += new string('!', exclamationCount);
             }
             return text;
