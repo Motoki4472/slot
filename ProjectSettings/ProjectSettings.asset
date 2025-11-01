@@ -880,11 +880,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 05b04c05-4588-4833-9ef2-21d25d78837b
+  cloudProjectId: f63628b3-a6c5-4e55-a0f1-9a9fd1036dfc
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: slot 2025-10-27_01-46-43
-  organizationId: bonjour4472
+  projectName: KeeoSlotting
+  organizationId: unity_94719604ed279a43f594
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

@@ -99,6 +99,7 @@ namespace Assets.Slot
                 // 左リール用のアンカー（0, 3, 6番目）を渡す
                 var targetAnchors = new Transform[] { anchors[0], anchors[3], anchors[6] };
                 reelManager.SnapToAnchorPositions(targetAnchors, () => UpdateSymbolsFromReel(0, targetAnchors));
+                SESystem.Instance.PlayStopSound();
             }
             else if (slotState == SlotState.middle)
             {
@@ -107,9 +108,11 @@ namespace Assets.Slot
                 // 中央リール用のアンカー（1, 4, 7番目）を渡す
                 var targetAnchors = new Transform[] { anchors[1], anchors[4], anchors[7] };
                 reelManager.SnapToAnchorPositions(targetAnchors, () => UpdateSymbolsFromReel(1, targetAnchors));
+                SESystem.Instance.PlayStopSound();
             }
             else if (slotState == SlotState.right)
             {
+                SESystem.Instance.StopSpinLoop();
                 var reelManager = rightReel.GetComponent<ManageReelAnimation>();
                 reelManager.StopSpinning();
                 // 右リール用のアンカー（2, 5, 8番目）を渡す
@@ -118,7 +121,6 @@ namespace Assets.Slot
                 {
                     UpdateSymbolsFromReel(2, targetAnchors);
                     var matches = CheckMatch();
-                    // TODO: matchesを使ったスコア加算などの処理をここに記述
                     gameSystem.ProcessMatch(matches);
                     if (matches.Count > 0)
                     {

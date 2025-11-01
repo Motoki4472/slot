@@ -196,6 +196,7 @@ namespace Assets.System
         {
             if (matches.Count == 0)
             {
+                SESystem.Instance.PlayMismatchSound();
                 combo.ResetCombo(); // マッチしなかったのでコンボをリセット
                 comboText.UpdateCombo(combo.GetCombo());
                 return;
@@ -241,6 +242,7 @@ namespace Assets.System
             scoreData.AddScore(totalScore);
             scoreText.UpdateScore(scoreData.GetScore());
             combo.IncrementCombo(); // マッチしたのでコンボを増やす
+            SESystem.Instance.PlayMatchSound();
 
             if (effectAnimation != null)
             {
@@ -254,7 +256,7 @@ namespace Assets.System
             comboText.UpdateCombo(combo.GetCombo());
         }
 
-        
+
 
         public void StartSlot()
         {
@@ -266,6 +268,8 @@ namespace Assets.System
 
                 idleTimeForStart = 0f;
                 HideIdlePrompt();
+                SESystem.Instance.PlayStartSound();
+                SESystem.Instance.StartSpinLoop();
             }
         }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using unityroom.Api;
 
 namespace Assets.Data
 {
@@ -22,6 +23,7 @@ namespace Assets.Data
                 highCombo = currentCombo;
                 PlayerPrefs.SetInt("HighCombo", highCombo);
             }
+            UnityroomApiClient.Instance.SendScore(1, currentCombo, ScoreboardWriteMode.HighScoreDesc);
         }
 
         public int GetCombo()
