@@ -41,12 +41,16 @@ namespace Assets.System
 
         [Header("アイドル時操作表示")]
         [SerializeField] private TextMeshProUGUI idlePromptText; // 操作を促すテキスト
-        [SerializeField] private float idleThreshold = 5.0f; // 5秒間操作がなければ表示
+        [SerializeField] private float idleThreshold = 3.0f; // 3秒間操作がなければ表示
         [SerializeField] private Transform[] idolAnchors = new Transform[2];
         private float idleTimeForStart = 3.5f;
         private float idleTimeForStop = 0f;
         private bool isIdlePromptVisible = false; // プロンプトが表示中かどうかのフラグ
         private Sequence idlePromptAnimation; // アニメーション管理用のシーケンス
+
+        [Header("特殊演出")]
+        [SerializeField] private SevenMatchEffect sevenMatchEffect; // 7揃い演出クラスへの参照
+        [SerializeField] private int sevenSymbolId = 3; // 7のシンボルID (インスペクターで変更可能)
 
         public enum GameState
         {
@@ -202,11 +206,38 @@ namespace Assets.System
                 return;
             }
 
+            // 7が揃ったかどうかをチェック
+            bool isSevenMatched = false;
+            foreach (var match in matches)
+            {
+                if (match.SymbolId == sevenSymbolId)
+                {
+                    isSevenMatched = true;
+                    break;
+                }
+            }
+
+            // 7が揃っていたら特別演出を再生
+            if (isSevenMatched && sevenMatchEffect != null)
+            {
+                sevenMatchEffect.Play();
+            }
+            else
+            {
+                // 通常のマッチSEとエフェクト
+                SESystem.Instance.PlayMatchSound();
+                if (effectAnimation != null)
+                {
+                    effectAnimation.PlayRandomEffect();
+                }
+            }
+
             int totalScore = 0;
             List<GameObject> matchedObjects = new List<GameObject>();
 
             foreach (var match in matches)
             {
+                // ... 既存のシンボル取得とスコア計算ロジック ...
                 // LineIdから行インデックスを取得
                 // 横ライン (LineId: 0, 1, 2)
                 if (match.LineId < row)
@@ -242,13 +273,6 @@ namespace Assets.System
             scoreData.AddScore(totalScore);
             scoreText.UpdateScore(scoreData.GetScore());
             combo.IncrementCombo(); // マッチしたのでコンボを増やす
-            SESystem.Instance.PlayMatchSound();
-
-            if (effectAnimation != null)
-            {
-                effectAnimation.PlayRandomEffect();
-                Debug.Log("エフェクトアニメーションを再生しました。");
-            }
 
             // マッチしたシンボルをアニメーションさせる
             PlayMatchAnimation(matchedObjects);
@@ -262,7 +286,6 @@ namespace Assets.System
         {
             if (currentState == GameState.CanStartSlot)
             {
-                currentState = GameState.StopSlot;
                 slotSystem.StartSlot(combo.GetCombo());
                 Handle.GetComponent<PushAnimation>().PlayAnimation();
 
@@ -270,6 +293,12 @@ namespace Assets.System
                 HideIdlePrompt();
                 SESystem.Instance.PlayStartSound();
                 SESystem.Instance.StartSpinLoop();
+
+                // 0.1秒後に状態をStopSlotに変更
+                DOVirtual.DelayedCall(0.1f, () =>
+                {
+                    currentState = GameState.StopSlot;
+                });
             }
         }
 
